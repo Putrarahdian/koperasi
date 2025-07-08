@@ -4,13 +4,14 @@ use App\Http\Controllers\AnggotaController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\SimpananAnggotaController;
 use App\Http\Controllers\PenggunaController;
+use App\Http\Middleware\CheckLogin;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/',[AuthController::class, 'showLogin']);
 Route::post('/login',[AuthController::class, 'login']);
 Route::post('/logout',[AuthController::class, 'logout'])->name('logout');
 
-route::middleware(['role:admin,bendahara'])->group(function(){ 
+route::middleware([CheckLogin::class . ':admin,bendahara'])->group(function (){ 
 
     Route::get('/anggotas', [AnggotaController::class, 'index'])->name('anggotas.index');
     Route::get('/anggotas/create', [AnggotaController::class, 'create'])->name('anggotas.create');
@@ -30,7 +31,7 @@ route::middleware(['role:admin,bendahara'])->group(function(){
     Route::put('/simpanans/{anggota}', [SimpananAnggotaController::class, 'update'])->name('simpanans.update');
 });
 
-route::middleware(['role:admin'])->group(function(){ 
+route::middleware([CheckLogin::class . ':admin'])->group(function (){ 
     
     Route::get('/penggunas', [PenggunaController::class, 'index'])->name('penggunas.index');
     Route::get('/penggunas/create', [PenggunaController::class, 'create'])->name('penggunas.create');
